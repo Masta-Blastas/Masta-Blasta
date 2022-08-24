@@ -10,6 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 42fba3558c973154bac0e94b7852e3cc, type: 3}
-  m_Name: HP
+  m_Name: HeavyDamage
   m_EditorClassIdentifier: 
-  Value: 100
+  Value: 30
