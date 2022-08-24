@@ -43,7 +43,7 @@ namespace UnityEngine.XR.OpenXR.Samples.InterceptFeature
         /// <inheritdoc />
         protected override IntPtr HookGetInstanceProcAddr(IntPtr func)
         {
-            Debug.Log("EXT: registering our own xrGetInstanceProcAddr");
+            //Debug.Log("EXT: registering our own xrGetInstanceProcAddr");
             return intercept_xrCreateSession_xrGetInstanceProcAddr(func);
         }
 
@@ -57,7 +57,7 @@ namespace UnityEngine.XR.OpenXR.Samples.InterceptFeature
             Internal_SetMessage(message);
 
             // here's one way you can grab the instance
-            Debug.Log($"EXT: Got xrInstance: {xrInstance}");
+            //Debug.Log($"EXT: Got xrInstance: {xrInstance}");
             return true;
         }
 
