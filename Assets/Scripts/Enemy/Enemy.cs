@@ -26,6 +26,7 @@ public class Enemy : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         DamageDealer damage = other.GetComponent<DamageDealer>();
+
         if (damage != null)
         {
             HP -= damage.damageAmount.Value;
