@@ -108,8 +108,8 @@ GameObject:
   m_Component:
   - component: {fileID: 775720657492760186}
   - component: {fileID: 775720657492760187}
-  - component: {fileID: 775720657492760188}
   - component: {fileID: 775720657492760185}
+  - component: {fileID: 797237717441677599}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -147,19 +147,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &775720657492760188
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 775720657492760189}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 597f4722444b27548bcb7f30215070c4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _speed: 0.75
 --- !u!54 &775720657492760185
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -176,3 +163,22 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 2
+--- !u!114 &797237717441677599
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 775720657492760189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ad3420b92a715f48afa12988bb3e23b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _speed: 0
+  HP: 30
+  pointValue: 15
+  scoreSystem: {fileID: 0}
+  death:
+    m_PersistentCalls:
+      m_Calls: []

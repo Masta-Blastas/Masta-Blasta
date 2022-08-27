@@ -81,19 +81,19 @@ namespace UnityEngine.XR.OpenXR.Samples.InterceptFeature
         protected override void OnSessionCreate(ulong xrSession)
         {
             // here's one way you can grab the session
-            Debug.Log($"EXT: Got xrSession: {xrSession}");
+            //Debug.Log($"EXT: Got xrSession: {xrSession}");
         }
 
         /// <inheritdoc />
         protected override void OnSessionBegin (ulong xrSession)
         {
-            Debug.Log($"EXT: xrBeginSession: {xrSession}");
+           // Debug.Log($"EXT: xrBeginSession: {xrSession}");
         }
 
         /// <inheritdoc />
         protected override void OnSessionEnd(ulong xrSession)
         {
-            Debug.Log($"EXT: about to xrEndSession: {xrSession}");
+            //Debug.Log($"EXT: about to xrEndSession: {xrSession}");
         }
 
         private const string ExtLib = "InterceptFeaturePlugin";
