@@ -4,11 +4,11 @@ using UnityEngine.XR.Interaction.Toolkit;
 public class Player : MonoBehaviour
 {
     [SerializeField]
-    private XRGrabInteractable gun1Grab;
+    private XRGrabInteractable plasmaBlaster;
     public GameObject bullet;
 
     public void Fire()
     {
-        Instantiate(bullet, gun1Grab.transform.position, gun1Grab.transform.rotation);
+        Instantiate(bullet, plasmaBlaster.transform.position, plasmaBlaster.transform.rotation);
     }
 }
