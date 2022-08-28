@@ -9,8 +9,7 @@ public abstract class EnemyBaseClass : MonoBehaviour
     //Making variables protected allows only classes that inherit from this class to manipulate them. 
     [SerializeField]
     protected float HP;
-    [SerializeField]
-    protected float speed;
+   
     [SerializeField]
     protected float pointValue;
 
@@ -24,6 +23,8 @@ public abstract class EnemyBaseClass : MonoBehaviour
     [SerializeField]
     protected List<Transform> wayPoints; // can change size of a list at run time if we need to. Cannot change an array size. 
     [SerializeField]
+    protected Transform[] playerPosition;
+    [SerializeField]
     protected int currentTarget;
     protected bool reversing;
     protected bool targetReached;
@@ -32,22 +33,73 @@ public abstract class EnemyBaseClass : MonoBehaviour
     [SerializeField]
     protected Animator anim;
     
+    protected enum State
+    {
+        Roaming,
+        Chasing,
+        Attacking,
+    }
+
+    [SerializeField]
+    protected State state;
    
     public virtual void Start()
     {
         player = GameObject.Find("XR Rig").GetComponent<Player>();
         _agent = GetComponent<NavMeshAgent>();
+
+        state = State.Roaming;
     }
 
-    public virtual void Attack()
-    {
-        //do some damage
-        Debug.Log("My name is " + this.gameObject.name + " and I am attacking");
-    }
 
     public virtual void Update()
     {
-        Patroling();
+        switch(state)
+        {
+            case State.Roaming:
+                Patroling();
+                break;
+            case State.Chasing:
+                Chasing();
+                break;
+            case State.Attacking:
+                Attack();
+                break;
+        }
+        
+    }
+
+    public virtual void Attack()
+    { 
+        float distance = Vector3.Distance(transform.position, player.transform.position);
+        transform.LookAt(player.transform);
+        anim.SetBool("Walk", false);
+        anim.SetBool("Attacking", true);
+        _agent.isStopped = true;
+        
+        if (distance > 4)
+        {
+            state = State.Chasing;
+        }
+    }
+    public virtual void Chasing()
+    {
+        _agent.isStopped = false;
+        anim.SetBool("Attacking", false);
+        anim.SetBool("Walk", true);
+
+
+        float distance = Vector3.Distance(transform.position, player.transform.position);
+        currentTarget = 0;
+        //transform.LookAt(player.transform);
+        if(distance > 2)
+        {
+            _agent.SetDestination(playerPosition[currentTarget].position);
+        }
+        else if(distance <= 2)
+        {
+            state = State.Attacking;
+        }
     }
 
     public virtual void Patroling()
@@ -111,5 +163,4 @@ public abstract class EnemyBaseClass : MonoBehaviour
 
         targetReached = false;
     }
-
 }
