@@ -4,13 +4,11 @@ using UnityEngine;
 
 public class Enemy_Melee : EnemyBaseClass
 {
-    public void ChasePlayer()
+
+    public override void Start()
     {
-        state = State.Chasing;
-    }
-    
-    public void Patrol()
-    {
-        state = State.Roaming;
+        base.Start();
+
+        state = State.Chasing; //sets default state to chasing. 
     }
 }

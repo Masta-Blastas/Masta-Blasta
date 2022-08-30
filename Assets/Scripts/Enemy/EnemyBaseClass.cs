@@ -35,7 +35,7 @@ public abstract class EnemyBaseClass : MonoBehaviour
     
     protected enum State
     {
-        Roaming,
+        WaypointNav,
         Chasing,
         Attacking,
     }
@@ -47,8 +47,6 @@ public abstract class EnemyBaseClass : MonoBehaviour
     {
         player = GameObject.Find("XR Rig").GetComponent<Player>();
         _agent = GetComponent<NavMeshAgent>();
-
-        state = State.Roaming;
     }
 
 
@@ -56,8 +54,8 @@ public abstract class EnemyBaseClass : MonoBehaviour
     {
         switch(state)
         {
-            case State.Roaming:
-                Patroling();
+            case State.WaypointNav:
+                WaypointNavigation();
                 break;
             case State.Chasing:
                 Chasing();
@@ -82,7 +80,7 @@ public abstract class EnemyBaseClass : MonoBehaviour
             state = State.Chasing;
         }
     }
-    public virtual void Chasing()
+    public virtual void Chasing() // base line logic for chase behavior
     {
         _agent.isStopped = false;
         anim.SetBool("Attacking", false);
@@ -91,7 +89,7 @@ public abstract class EnemyBaseClass : MonoBehaviour
 
         float distance = Vector3.Distance(transform.position, player.transform.position);
         currentTarget = 0;
-        //transform.LookAt(player.transform);
+  
         if(distance > 2)
         {
             _agent.SetDestination(playerPosition[currentTarget].position);
@@ -102,7 +100,7 @@ public abstract class EnemyBaseClass : MonoBehaviour
         }
     }
 
-    public virtual void Patroling()
+    public virtual void WaypointNavigation()
     {
         if (wayPoints.Count > 0) // are there waypoints?
         {
