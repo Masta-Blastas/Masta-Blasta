@@ -8,12 +8,15 @@ public class Enemy_Blaster : EnemyBaseClass
     {
         base.Start();
 
-        state = State.WaypointNav;
+        state = State.Patrol; // patrols until player enters their collider. 
     }
 
-    public override void WaypointNavigation()
+    private void OnTriggerEnter(Collider other)
     {
-        base.WaypointNavigation();
-        transform.LookAt(playerPosition[0]);
+        if(other.CompareTag("Player"))
+        {
+            state = State.Combat;
+            
+        }
     }
 }

@@ -35,9 +35,14 @@ public abstract class EnemyBaseClass : MonoBehaviour
     
     protected enum State
     {
+        //Melee Enemy States
         WaypointNav,
         Chasing,
         Attacking,
+        //Blaster Enemy States
+        Patrol, 
+        Combat,
+        SeekShelter,
     }
 
     [SerializeField]
@@ -63,10 +68,17 @@ public abstract class EnemyBaseClass : MonoBehaviour
             case State.Attacking:
                 Attack();
                 break;
+            case State.Patrol:
+                WaypointNavigation(); // for now. 
+                break;
+            case State.Combat:
+                CombatWaypoint();
+                break;
         }
         
     }
 
+    #region MELEE ENEMY FUNCTIONS
     public virtual void Attack()
     { 
         float distance = Vector3.Distance(transform.position, player.transform.position);
@@ -161,4 +173,73 @@ public abstract class EnemyBaseClass : MonoBehaviour
 
         targetReached = false;
     }
+    #endregion
+
+    #region BLASTER ENEMY FUNCTIONS
+    public virtual void CombatWaypoint()
+    {
+        transform.LookAt(player.transform.position);
+
+        if (wayPoints.Count > 0) // are there waypoints?
+        {
+            if (wayPoints[currentTarget] != null)// does the current target exist?
+            {
+                _agent.SetDestination(wayPoints[currentTarget].position);
+
+
+                float distance = Vector3.Distance(transform.position, wayPoints[currentTarget].position); // distance between target and enemy
+
+                if (distance < 1.0f)
+                {
+                    anim.SetBool("Walk", false);
+                    anim.SetBool("Firing", true);
+                }
+
+                else if (distance > 1)
+                {
+                    anim.SetBool("Walk", true);
+                    anim.SetBool("Firing", false);
+
+                }
+
+                if (distance < 1.0f && targetReached == false)
+                {
+                    targetReached = true;
+
+                    StartCoroutine(StopFireWeapon());
+                }
+            }
+        }
+    }
+
+    IEnumerator StopFireWeapon()
+    {
+        yield return new WaitForSeconds(Random.Range(6.0f, 8.0f)); // pause for 2 - 5 seconds. 
+
+        if (reversing == true)
+        {
+            currentTarget--;
+
+            if (currentTarget == 0) // there are no more waypoints to decrement. 
+            {
+                reversing = false;
+                currentTarget = 0; // set to zero
+            }
+        }
+
+        else if (reversing == false)
+        {
+            currentTarget++;
+
+            if (currentTarget == wayPoints.Count)  //if at the end of the waypoint list, reverse. 
+            {
+                //made it to the end. reverse
+                reversing = true;
+                currentTarget--;
+            }
+        }
+
+        targetReached = false;
+    }
+    #endregion
 }
