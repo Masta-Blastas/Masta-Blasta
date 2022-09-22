@@ -90,6 +90,7 @@ public abstract class EnemyBaseClass : MonoBehaviour
         if (distance > 4)
         {
             state = State.Chasing;
+                                                                                                                                                //TO DO: Make it go back to weaypoint Nav when player is too far away/lost sight of player
         }
     }
     public virtual void Chasing() // base line logic for chase behavior
@@ -136,7 +137,7 @@ public abstract class EnemyBaseClass : MonoBehaviour
                 if (distance < 1.0f && targetReached == false)
                 {
                     targetReached = true;
-
+                                                                                                                                    //TO DO: set a looking back and forth animation to true. 
                     StartCoroutine(Idle());
                 }
             }
@@ -145,7 +146,6 @@ public abstract class EnemyBaseClass : MonoBehaviour
 
     IEnumerator Idle() // target reached is false, so resume the if statement in Patroling. 
     {
-
         yield return new WaitForSeconds(Random.Range(2.0f, 5.0f)); // pause for 2 - 5 seconds. 
         
         if(reversing == true)
