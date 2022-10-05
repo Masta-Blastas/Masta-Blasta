@@ -32,10 +32,15 @@ public abstract class EnemyBaseClass : MonoBehaviour
     protected NavMeshAgent _agent;
     [SerializeField]
     protected Animator anim;
+
+    [SerializeField]
+    protected GameObject laserBeam;
+    private bool attacking = false;
+
     
     protected enum State
     {
-        //Melee Enemy States
+        //Brain Snatcher Methods
         WaypointNav,
         Chasing,
         Attacking,
@@ -83,38 +88,52 @@ public abstract class EnemyBaseClass : MonoBehaviour
     { 
         float distance = Vector3.Distance(transform.position, player.transform.position);
         transform.LookAt(player.transform);
-        anim.SetBool("Walk", false);
-        anim.SetBool("Attacking", true);
         _agent.isStopped = true;
-        
-        if (distance > 4)
+
+        if (attacking == false) //check if attacking is false to run this, otherwise it will just loop over and over. 
         {
-            state = State.Chasing;
-                                                                                                                                                //TO DO: Make it go back to weaypoint Nav when player is too far away/lost sight of player
+            attacking = true;
+            StartCoroutine(AttackLoop());
         }
+        
+        if (distance > 5)
+        {
+            state = State.Chasing;       //TO DO: Make it go back to weaypoint Nav when player is too far away/lost sight of player
+            //StopCoroutine(AttackLoop());
+        }
+    }
+
+    IEnumerator AttackLoop()
+    {
+        while(attacking == true)
+        {
+            yield return new WaitForSeconds(1.0f);
+            laserBeam.SetActive(true);
+            yield return new WaitForSeconds(3.0f);
+            laserBeam.SetActive(false);
+        }
+
+        attacking = false; // set this back to false on the way out to make sure it is checked in Attack()
     }
     public virtual void Chasing() // base line logic for chase behavior
     {
         _agent.isStopped = false;
-        anim.SetBool("Attacking", false);
-        anim.SetBool("Walk", true);
-
 
         float distance = Vector3.Distance(transform.position, player.transform.position);
-        currentTarget = 0;
-  
-        if(distance > 2)
+        currentTarget = 0; // current target is the player position
+        
+        if (distance > 7)
         {
             _agent.SetDestination(playerPosition[currentTarget].position);
         }
-        else if(distance <= 2)
+        else if(distance <= 7)
         {
             state = State.Attacking;
         }
     }
 
     public virtual void WaypointNavigation()
-    {
+    {      
         if (wayPoints.Count > 0) // are there waypoints?
         {
             if (wayPoints[currentTarget] != null)// does the current target exist?
@@ -123,22 +142,18 @@ public abstract class EnemyBaseClass : MonoBehaviour
                 
 
                 float distance = Vector3.Distance(transform.position, wayPoints[currentTarget].position); // distance between target and enemy
-
-                if(distance < 1.0f)
-                {
-                    anim.SetBool("Walk", false);
-                }
-
-                else if(distance > 1)
-                {
-                    anim.SetBool("Walk", true);
-                }
+                float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
 
                 if (distance < 1.0f && targetReached == false)
                 {
                     targetReached = true;
                                                                                                                                     //TO DO: set a looking back and forth animation to true. 
                     StartCoroutine(Idle());
+                }
+
+                if(distanceToPlayer <= 10)
+                {
+                    state = State.Chasing;
                 }
             }
         }

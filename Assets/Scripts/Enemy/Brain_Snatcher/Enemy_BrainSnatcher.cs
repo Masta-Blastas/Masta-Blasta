@@ -13,13 +13,16 @@ public class Enemy_BrainSnatcher : EnemyBaseClass
     public override void Update()
     {
         base.Update();
-
+       
         if(HP <= 0)
         {
             scoreSystem.score.ApplyChange(pointValue); // applies value to score. 
             death.Invoke(); // invokes the death event
+           
             Destroy(this.gameObject); // destroy. 
         }
+
+
     }
 
     public void StateChange_CHASE()
