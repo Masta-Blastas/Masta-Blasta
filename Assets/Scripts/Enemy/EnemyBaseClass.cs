@@ -29,6 +29,12 @@ public abstract class EnemyBaseClass : MonoBehaviour
     protected bool reversing;
     protected bool targetReached;
 
+    [SerializeField]
+    protected float range; // radius of a sphere\
+    [SerializeField]
+    protected Transform centerPoint; //center of the area the nav mesh agent wants to move within. 
+    //if we dont care about the center point we can change this to the transform of the object. Should navigate randomly everywhere. 
+
     protected NavMeshAgent _agent;
     [SerializeField]
     protected Animator anim;
@@ -42,6 +48,7 @@ public abstract class EnemyBaseClass : MonoBehaviour
     {
         //Brain Snatcher Methods
         WaypointNav,
+        RandomNav,
         Chasing,
         Attacking,
         //Blaster Enemy States
@@ -67,6 +74,9 @@ public abstract class EnemyBaseClass : MonoBehaviour
             case State.WaypointNav:
                 WaypointNavigation();
                 break;
+            case State.RandomNav:
+                RandomNavigation();
+                break;
             case State.Chasing:
                 Chasing();
                 break;
@@ -81,6 +91,40 @@ public abstract class EnemyBaseClass : MonoBehaviour
                 break;
         }
         
+    }
+
+    public virtual void RandomNavigation()
+    {
+        float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
+        
+        if(_agent.remainingDistance <= _agent.stoppingDistance) // done with path
+        {
+            Vector3 point;
+            if(RandomPoint(centerPoint.position, range, out point))
+            {
+                Debug.DrawRay(point, Vector3.up, Color.blue, 1.0f);
+                _agent.SetDestination(point);
+            }
+        }
+
+        if(distanceToPlayer <= 10)
+        {
+            state = State.Chasing;
+        }
+    }
+
+    public virtual bool RandomPoint(Vector3 center, float range, out Vector3 result)
+    {
+        Vector3 randomPoint = center + Random.insideUnitSphere * range;
+        NavMeshHit hit;
+        if(NavMesh.SamplePosition(randomPoint, out hit, 1.0f, NavMesh.AllAreas))
+        {
+            result = hit.position;
+            return true;
+        }
+
+        result = Vector3.zero;
+        return false;
     }
 
     #region MELEE ENEMY FUNCTIONS
@@ -122,13 +166,18 @@ public abstract class EnemyBaseClass : MonoBehaviour
         float distance = Vector3.Distance(transform.position, player.transform.position);
         currentTarget = 0; // current target is the player position
         
-        if (distance > 7)
+        if (distance > 7 && distance < 15) //if player is withing this distance, chase them
         {
-            _agent.SetDestination(playerPosition[currentTarget].position);
+            _agent.SetDestination(playerPosition[currentTarget].position); 
         }
-        else if(distance <= 7)
+        else if(distance <= 7) // if closer, attack
         {
             state = State.Attacking;
+        }
+
+        if(distance >= 15) // if far away forget about player. 
+        {
+            state = State.RandomNav;
         }
     }
 

@@ -7,7 +7,7 @@ public class Enemy_BrainSnatcher : EnemyBaseClass
     public override void Start()
     {
         base.Start(); // gets necessary references
-        state = State.WaypointNav; 
+        state = State.RandomNav; 
     }
 
     public override void Update()
