@@ -189,7 +189,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HP: 50
   pointValue: 100
-  scoreSystem: {fileID: 0}
+  scoreSystem: {fileID: 1808127899417780465, guid: 7efdd972dfcae4a4cb6a672733e56331,
+    type: 3}
   death:
     m_PersistentCalls:
       m_Calls:
@@ -205,11 +206,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  wayPoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  playerPosition:
-  - {fileID: 0}
+  wayPoints: []
+  playerPosition: {fileID: 0}
   currentTarget: 0
   range: 10
   centerPoint: {fileID: 2460062810164815192}

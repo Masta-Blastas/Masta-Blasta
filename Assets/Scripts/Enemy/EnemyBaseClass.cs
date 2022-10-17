@@ -23,7 +23,7 @@ public abstract class EnemyBaseClass : MonoBehaviour
     [SerializeField]
     protected List<Transform> wayPoints; // can change size of a list at run time if we need to. Cannot change an array size. 
     [SerializeField]
-    protected Transform[] playerPosition;
+    protected Transform playerPosition;
     [SerializeField]
     protected int currentTarget;
     protected bool reversing;
@@ -64,6 +64,7 @@ public abstract class EnemyBaseClass : MonoBehaviour
     {
         player = GameObject.Find("XR Rig").GetComponent<Player>();
         _agent = GetComponent<NavMeshAgent>();
+        playerPosition = GameObject.Find("XR Rig").GetComponent<Transform>();
     }
 
 
@@ -168,7 +169,7 @@ public abstract class EnemyBaseClass : MonoBehaviour
         
         if (distance > 7 && distance < 15) //if player is withing this distance, chase them
         {
-            _agent.SetDestination(playerPosition[currentTarget].position); 
+            _agent.SetDestination(playerPosition.position); 
         }
         else if(distance <= 7) // if closer, attack
         {
