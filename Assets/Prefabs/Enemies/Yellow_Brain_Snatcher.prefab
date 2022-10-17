@@ -214,6 +214,8 @@ MonoBehaviour:
   anim: {fileID: 8282413312138187894}
   laserBeam: {fileID: 1398230387}
   state: 0
+  explosionPrefab: {fileID: 5021565837271709569, guid: ecb409a2964b79d408cac944ad616b16,
+    type: 3}
 --- !u!195 &5525681659222441521
 NavMeshAgent:
   m_ObjectHideFlags: 0

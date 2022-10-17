@@ -19,9 +19,11 @@ public class Weapon : MonoBehaviour
     [SerializeField]
     private GameObject pointToFireFrom;
 
+
     public void Fire()
     {
         Instantiate(muzzleFlash, pointToFireFrom.transform.position, pointToFireFrom.transform.rotation);
         Instantiate(projectileToInstantiate, weapon.transform.position, weapon.transform.rotation);
     }
+
 }

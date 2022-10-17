@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Enemy_BrainSnatcher : EnemyBaseClass
 {
+    [SerializeField]
+    private GameObject explosionPrefab;
+
     public override void Start()
     {
         base.Start(); // gets necessary references
@@ -18,7 +21,7 @@ public class Enemy_BrainSnatcher : EnemyBaseClass
         {
             scoreSystem.score.ApplyChange(pointValue); // applies value to score. 
             death.Invoke(); // invokes the death event
-           
+            Instantiate(explosionPrefab, transform.position, Quaternion.identity);
             Destroy(this.gameObject); // destroy. 
         }
 
