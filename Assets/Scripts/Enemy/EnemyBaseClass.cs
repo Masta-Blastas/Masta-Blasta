@@ -27,6 +27,7 @@ public abstract class EnemyBaseClass : MonoBehaviour
     [SerializeField]
     protected int currentTarget;
     protected bool reversing;
+    [SerializeField]
     protected bool targetReached;
 
     [SerializeField]
@@ -94,21 +95,32 @@ public abstract class EnemyBaseClass : MonoBehaviour
         
     }
 
+    #region RANDOM NAVIGATION ENEMIES
     public virtual void RandomNavigation()
     {
         float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
-        
-        if(_agent.remainingDistance <= _agent.stoppingDistance) // done with path
+
+
+        if (_agent.remainingDistance <= _agent.stoppingDistance) // done with path
         {
+
             Vector3 point;
-            if(RandomPoint(centerPoint.position, range, out point))
+
+            if (RandomPoint(centerPoint.position, range, out point))
             {
                 Debug.DrawRay(point, Vector3.up, Color.blue, 1.0f);
+                targetReached = true;
                 _agent.SetDestination(point);
             }
+
+            if(targetReached == true)
+            {
+                StartCoroutine(Scanning());
+            }
+
         }
 
-        if(distanceToPlayer <= 10)
+        if (distanceToPlayer <= 10)
         {
             state = State.Chasing;
         }
@@ -118,17 +130,54 @@ public abstract class EnemyBaseClass : MonoBehaviour
     {
         Vector3 randomPoint = center + Random.insideUnitSphere * range;
         NavMeshHit hit;
+
         if(NavMesh.SamplePosition(randomPoint, out hit, 1.0f, NavMesh.AllAreas))
         {
             result = hit.position;
             return true;
         }
 
-        result = Vector3.zero;
+        result = Vector3.zero; 
         return false;
     }
 
-    #region MELEE ENEMY FUNCTIONS
+    IEnumerator Scanning()
+    {
+        anim.SetBool("Scanning", true);
+        _agent.isStopped = true ;
+        yield return new WaitForSeconds(Random.Range(2.0f, 4.0f));
+        _agent.isStopped = false;
+        anim.SetBool("Scanning", false);
+        targetReached = false;
+    }
+    #endregion
+
+    #region CHASING BEHAVIOR
+    public virtual void Chasing() // base line logic for chase behavior
+    {
+        _agent.isStopped = false;
+
+        float distance = Vector3.Distance(transform.position, player.transform.position);
+        currentTarget = 0; // current target is the player position
+
+        if (distance > 7 && distance < 15) //if player is withing this distance, chase them
+        {
+            _agent.SetDestination(playerPosition.position);
+        }
+        else if (distance <= 7) // if closer, attack
+        {
+            state = State.Attacking;
+        }
+
+        if (distance >= 15) // if far away forget about player. 
+        {
+            state = State.RandomNav;
+        }
+    }
+
+    #endregion
+
+    #region ATTACK BEHAVIOR
     public virtual void Attack()
     { 
         float distance = Vector3.Distance(transform.position, player.transform.position);
@@ -160,28 +209,9 @@ public abstract class EnemyBaseClass : MonoBehaviour
 
         attacking = false; // set this back to false on the way out to make sure it is checked in Attack()
     }
-    public virtual void Chasing() // base line logic for chase behavior
-    {
-        _agent.isStopped = false;
+    #endregion
 
-        float distance = Vector3.Distance(transform.position, player.transform.position);
-        currentTarget = 0; // current target is the player position
-        
-        if (distance > 7 && distance < 15) //if player is withing this distance, chase them
-        {
-            _agent.SetDestination(playerPosition.position); 
-        }
-        else if(distance <= 7) // if closer, attack
-        {
-            state = State.Attacking;
-        }
-
-        if(distance >= 15) // if far away forget about player. 
-        {
-            state = State.RandomNav;
-        }
-    }
-
+    #region WAYPOINT NAVIGATION
     public virtual void WaypointNavigation()
     {      
         if (wayPoints.Count > 0) // are there waypoints?
@@ -306,5 +336,7 @@ public abstract class EnemyBaseClass : MonoBehaviour
 
         targetReached = false;
     }
-    #endregion
+    #endregion // probably delete could still use some of this for walk walkers.  // maybe useful for wall walkers
+
+
 }

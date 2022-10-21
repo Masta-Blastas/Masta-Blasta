@@ -21,7 +21,7 @@ public class SpawnManager : MonoBehaviour
         {
             Instantiate(rollingBrainSnatcher, spawnPoint[0].position, Quaternion.identity);
 
-            yield return new WaitForSeconds(Random.Range(2.0f, 4.0f));
+            yield return new WaitForSeconds(Random.Range(20.0f, 25.0f));
         }
     }
 }
