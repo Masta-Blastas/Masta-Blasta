@@ -5,13 +5,15 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     [SerializeField]
-    private GameObject rollingBrainSnatcher;
+    private GameObject[] rollingBrainSnatcher;
 
     [SerializeField]
     private List<Transform> spawnPoint;
 
+
     void Start()
     {
+   
         StartCoroutine(SpawnRoutine());
     }
 
@@ -19,9 +21,9 @@ public class SpawnManager : MonoBehaviour
     {
         while(true)
         {
-            Instantiate(rollingBrainSnatcher, spawnPoint[0].position, Quaternion.identity);
+            Instantiate(rollingBrainSnatcher[Random.Range(0,2)], spawnPoint[0].position, Quaternion.identity);
 
-            yield return new WaitForSeconds(Random.Range(20.0f, 25.0f));
+            yield return new WaitForSeconds(Random.Range(2.0f, 5.0f));
         }
     }
 }
