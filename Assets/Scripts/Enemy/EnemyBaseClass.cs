@@ -42,7 +42,10 @@ public abstract class EnemyBaseClass : MonoBehaviour
 
     [SerializeField]
     protected GameObject laserBeam;
-    private bool attacking = false;
+    protected bool attacking = false;
+    protected bool dead;
+
+
 
     
     protected enum State
@@ -52,6 +55,7 @@ public abstract class EnemyBaseClass : MonoBehaviour
         RandomNav,
         Chasing,
         Attacking,
+        Death,
         //Blaster Enemy States
         Patrol, 
         Combat,
@@ -63,6 +67,7 @@ public abstract class EnemyBaseClass : MonoBehaviour
    
     public virtual void Start()
     {
+        dead = false;
         player = GameObject.Find("XR Rig").GetComponent<Player>();
         _agent = GetComponent<NavMeshAgent>();
         playerPosition = GameObject.Find("XR Rig").GetComponent<Transform>();
@@ -85,6 +90,9 @@ public abstract class EnemyBaseClass : MonoBehaviour
             case State.Attacking:
                 Attack();
                 break;
+            case State.Death:
+                Death();
+                break;
             case State.Patrol:
                 WaypointNavigation(); // for now. 
                 break;
@@ -98,6 +106,11 @@ public abstract class EnemyBaseClass : MonoBehaviour
     #region RANDOM NAVIGATION ENEMIES
     public virtual void RandomNavigation()
     {
+        if(dead == true) // prevents movement after death
+        {
+            return;
+        }
+
         float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
 
 
@@ -122,6 +135,9 @@ public abstract class EnemyBaseClass : MonoBehaviour
 
         if (distanceToPlayer <= 10)
         {
+            anim.SetBool("Moving", false);
+            anim.SetBool("Scanning", false);
+            anim.SetBool("Chasing", true);
             state = State.Chasing;
         }
     }
@@ -143,11 +159,16 @@ public abstract class EnemyBaseClass : MonoBehaviour
 
     IEnumerator Scanning()
     {
+        anim.SetBool("Moving", false);
         anim.SetBool("Scanning", true);
         _agent.isStopped = true ;
         yield return new WaitForSeconds(Random.Range(2.0f, 4.0f));
+
+        //getting close duiring this time makes weird stuff happen. 
+
         _agent.isStopped = false;
         anim.SetBool("Scanning", false);
+        anim.SetBool("Moving", true);
         targetReached = false;
     }
     #endregion
@@ -158,7 +179,6 @@ public abstract class EnemyBaseClass : MonoBehaviour
         _agent.isStopped = false;
 
         float distance = Vector3.Distance(transform.position, player.transform.position);
-        currentTarget = 0; // current target is the player position
 
         if (distance > 7 && distance < 15) //if player is withing this distance, chase them
         {
@@ -166,11 +186,15 @@ public abstract class EnemyBaseClass : MonoBehaviour
         }
         else if (distance <= 7) // if closer, attack
         {
+            anim.SetBool("Chasing", false);
+            anim.SetBool("Attacking", true);
             state = State.Attacking;
         }
 
         if (distance >= 15) // if far away forget about player. 
         {
+            anim.SetBool("Chasing", false);
+            anim.SetBool("Moving", true);
             state = State.RandomNav;
         }
     }
@@ -190,8 +214,11 @@ public abstract class EnemyBaseClass : MonoBehaviour
             StartCoroutine(AttackLoop());
         }
         
-        if (distance > 5)
+        if (distance > 7)
         {
+            anim.SetBool("Attacking", false);
+            anim.SetBool("Chasing", true);
+            attacking = false;
             state = State.Chasing;       //TO DO: Make it go back to weaypoint Nav when player is too far away/lost sight of player
             //StopCoroutine(AttackLoop());
         }
@@ -201,6 +228,7 @@ public abstract class EnemyBaseClass : MonoBehaviour
     {
         while(attacking == true)
         {
+            
             yield return new WaitForSeconds(1.0f);
             laserBeam.SetActive(true);
             yield return new WaitForSeconds(3.0f);
@@ -210,6 +238,25 @@ public abstract class EnemyBaseClass : MonoBehaviour
         attacking = false; // set this back to false on the way out to make sure it is checked in Attack()
     }
     #endregion
+
+    #region DEATH
+    public virtual void Death() //needs work for sure./ 
+    {
+        if(dead == false)
+        {
+            anim.SetBool("Chasing", false);
+            anim.SetBool("Attacking", false);
+            attacking = false; // exits coroutine;
+            anim.SetBool("Moving", false);
+            anim.SetBool("Idling", false);
+            anim.SetBool("Scanning", false);
+            laserBeam.SetActive(false); // if dead while attacking
+            anim.SetTrigger("Death");
+            StopAllCoroutines();
+            dead = true;
+        }
+    }
+    #endregion  
 
     #region WAYPOINT NAVIGATION
     public virtual void WaypointNavigation()

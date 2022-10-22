@@ -1,15 +1,48 @@
 fileFormatVersion: 2
-guid: d343594568f89184bb52f3badf543c60
+guid: 68c7225b9ea66bd4990722f69be4d20d
 ModelImporter:
   serializedVersion: 21202
   internalIDToNameTable:
   - first:
+      74: 2630043017172262666
+    second: Bullet_Death
+  - first:
+      74: 1358262452650834379
+    second: Move
+  - first:
+      74: 1010201314582779499
+    second: Scan bounce
+  - first:
+      74: 6943567996592730021
+    second: BrainSnatcher|Alert
+  - first:
+      74: 5205248732698283484
+    second: BrainSnatcher|Attack
+  - first:
+      74: 2250924948760248107
+    second: BrainSnatcher|Bullet Death
+  - first:
+      74: -4831770285842847897
+    second: BrainSnatcher|Chase
+  - first:
+      74: 111391359213454210
+    second: BrainSnatcher|Energy Death
+  - first:
+      74: -4178504987117212646
+    second: BrainSnatcher|Move
+  - first:
+      74: 8054810005101557319
+    second: BrainSnatcher|Scan
+  - first:
       74: -6136378184624533025
     second: BrainSnatcher|Scan Animation
+  - first:
+      74: -7136066566111784118
+    second: BrainSnatcher|Scan bounce
   externalObjects: {}
   materials:
-    materialImportMode: 2
-    materialName: 2
+    materialImportMode: 1
+    materialName: 0
     materialSearch: 1
     materialLocation: 0
   animations:
@@ -34,40 +67,11 @@ ModelImporter:
     animationWrapMode: 0
     extraExposedTransformPaths: []
     extraUserProperties: []
-    clipAnimations:
-    - serializedVersion: 16
-      name: BrainSnatcher|Scan Animation
-      takeName: BrainSnatcher|Scan Animation
-      internalID: 0
-      firstFrame: 0
-      lastFrame: 80
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 1
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
+    clipAnimations: []
     isReadable: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: 10
+    globalScale: 1
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
@@ -120,8 +124,8 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 10
-    rootMotionBoneName: 
+    globalScale: 1
+    rootMotionBoneName: Brain_Snatcher_Mesh
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1

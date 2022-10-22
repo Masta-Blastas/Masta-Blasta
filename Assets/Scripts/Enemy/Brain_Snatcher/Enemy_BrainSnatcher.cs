@@ -21,8 +21,12 @@ public class Enemy_BrainSnatcher : EnemyBaseClass
         {
             scoreSystem.score.ApplyChange(pointValue); // applies value to score. 
             death.Invoke(); // invokes the death event
-            Instantiate(explosionPrefab, transform.position, Quaternion.identity);
-            Destroy(this.gameObject); // destroy. 
+            state = State.Death;
+            Destroy(this.gameObject, 3.0f); // destroy. 
+            
+            // if hit with explosive round Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+
+            //if hit with energy rounds anim.SetTrigger("EnergyDeath);
         }
 
 
