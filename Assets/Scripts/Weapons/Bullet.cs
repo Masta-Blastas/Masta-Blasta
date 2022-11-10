@@ -6,11 +6,13 @@ public class Bullet : MonoBehaviour
 {
     [SerializeField]
     private float _speed;
+    [SerializeField]
+    private GameObject hitEffect;
 
-    //private void Start()
-    //{
-    //    Destroy(this.gameObject, 5.0f);
-    //}
+    private void Start()
+    {
+        Destroy(this.gameObject, 5.0f);
+    }
 
     void Update()
     {
@@ -19,6 +21,10 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Destroy(this.gameObject);
+        if(other.CompareTag("Enemy"))
+        {
+            Instantiate(hitEffect, transform.position, Quaternion.identity);
+            Destroy(this.gameObject);
+        }
     }
 }
